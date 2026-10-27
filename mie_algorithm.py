@@ -19,7 +19,7 @@ SLACK = 1e-9        # Spielraum in der zweiten Stufe, damit der Mindestnutzen de
 
 
 def assignment(values) -> tuple:
-    """Zuordnung mit der größten Summe der Bewertungen (Ungarische Methode); sigma[i] = Fläche von Mieter i."""
+    """Zuordnung mit der größten Summe der Bewertungen (scipy.optimize.linear_sum_assignment, löst dasselbe wie die Ungarische Methode); sigma[i] = Fläche von Mieter i."""
     rows, cols = linear_sum_assignment(-np.asarray(values))
     sigma = [0] * len(rows)
     for i, j in zip(rows, cols):

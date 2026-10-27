@@ -61,7 +61,7 @@ def test_witness_lines_by_hand(a_trio):
     lines = ev.witness_lines(a_trio)
     assert lines[0] == "**Gleich:** Mieter 1 hat Fläche A (Nutzen −333 €) und beneidet Fläche C: dort wäre sein Nutzen 567 € (Neid 900 €)."
     assert lines[1].startswith("**Mittel:** Mieter 1 hat Fläche A (Nutzen 0 €) und beneidet Fläche C: dort wäre sein Nutzen 33 € (Neid 33 €)")
-    assert lines[2] == "**Neidfrei (Maximin), negative Preise:** Fläche A (−100 €); wer diese Fläche nimmt, bekommt Geld dazu; nur so zieht niemand eine andere Fläche vor."
+    assert lines[2] == "**Neidfrei (Maximin), negative Preise:** Fläche A (−100 €); wer diese Fläche nimmt, bekommt Geld dazu; so wird der Mindestnutzen am größten (ohne negative Preise ginge es auch, dann ist der Mindestnutzen aber kleiner)."
     assert len(lines) == 3
 
 
@@ -70,7 +70,7 @@ def test_verdict_state_by_hand(a_trio):
     assert kind == "warning"
     assert text == ("Bei gleicher Aufteilung (333,3 € je Fläche) ist der Mindestnutzen −333 € und der größte Neid 900 € (Mieter 1 beneidet Fläche C). "
                     "Hier gibt es neidfreie Preise; der größte Mindestnutzen ist 100 € (Preise von −100 € bis 900 €, Gewinn gegenüber gleich 433 €). "
-                    "Dafür ist mindestens ein Preis negativ. Verlangt man Preise ab 0, sinkt der Mindestnutzen auf 0 €.")
+                    "Bei diesem größten Mindestnutzen ist mindestens ein Preis negativ. Verlangt man Preise ab 0, sinkt der Mindestnutzen auf 0 €.")
 
 
 def test_verdict_state_without_negative_prices_and_with_a_whole_euro_share():

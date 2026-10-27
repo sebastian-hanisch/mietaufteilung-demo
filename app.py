@@ -56,7 +56,7 @@ st.markdown(
     f"""
 Mehrere Betriebe mieten gemeinsam eine Lagerhalle, die in **gleich viele Flächen** wie Mieter geteilt ist, und zahlen zusammen eine **feste Gesamtmiete** ({C.RENT:,} €). Die Flächen sind nicht gleich viel wert: eine liegt am Tor, eine hat keine Rampe. Jeder Mieter sagt, **was ihm jede Fläche wert ist** (seine Bewertungen summieren sich auf die Gesamtmiete).
 Gesucht sind eine **Zuordnung** (wer bekommt welche Fläche) und **Preise** (die sich auf die Gesamtmiete summieren), so dass **niemand eine andere Fläche zu deren Preis lieber hätte**: Neidfreiheit. Die naheliegende **gleiche Aufteilung** (Miete durch Flächenzahl) erfüllt das fast nie.
-Die Demo vergleicht **fünf Preisregeln** auf denselben Bewertungen und zeigt, was neidfreie Preise brauchen: eine bestimmte Zuordnung, manchmal **negative Preise** und eine Entscheidung, wer wie viel bekommt (hier: der größte Mindestnutzen).
+Die Demo vergleicht **fünf Preisregeln** auf denselben Bewertungen und zeigt, was neidfreie Preise brauchen: eine bestimmte Zuordnung, manchmal **negative Preise** (unvermeidbar nur dort, wo es keine neidfreien Preise ab 0 gibt) und eine Entscheidung, wer wie viel bekommt (hier: der größte Mindestnutzen, der oft negative Preise wählt).
 Verwandt: `hungarian-demo` und `auction-algorithm-demo` (Zuordnung), `moulin-demo` und `shapley-demo` (Kosten teilen), `unteilbare-gueter-demo` (Güter ohne Preise verteilen).
 
 Weiter unten: der Abschnitt **🔬 Messreihen**, **🚧 Wo die Annahmen enden** und der Expander **📐 Mathematische Formulierung**.
@@ -67,7 +67,7 @@ with st.expander("So wird gerechnet", expanded=True):
     st.markdown(
         """
 1. **Bewertungen:** ganze Euro-Beträge je Mieter und Fläche, jede Zeile summiert sich auf die Gesamtmiete; drei Modelle (unabhängig, ähnlich, eine Premiumfläche) und die Ungleichheit (je größer, desto ungleicher bewertet ein Mieter die Flächen).
-2. **Zuordnung:** die mit der größten Summe der Bewertungen (Ungarische Methode). Nur zu einer solchen Zuordnung gibt es neidfreie Preise, und zu jeder gibt es dieselben.
+2. **Zuordnung:** die mit der größten Summe der Bewertungen (gerechnet mit `scipy.optimize.linear_sum_assignment`, das dasselbe löst wie die Ungarische Methode). Nur zu einer solchen Zuordnung gibt es neidfreie Preise, und zu jeder gibt es dieselben.
 3. **Preise:** *Gleich:* Miete durch Flächenzahl. *Mittel:* Durchschnitt der Bewertungen je Fläche. *Neidfrei (Maximin):* unter allen neidfreien Preisen der größte kleinste Nutzen, dann die kleinste Preisspanne (lineare Optimierung). *Ab 0:* dasselbe, aber kein Preis unter 0. *Kleinste Spanne:* der geringste Abstand zwischen teuerster und billigster Fläche unter allen neidfreien Preisen.
 4. **Nutzen** eines Mieters: Bewertung seiner Fläche minus ihr Preis. **Neid:** was eine andere Fläche mehr Nutzen brächte.
         """
@@ -129,7 +129,7 @@ st.subheader("🔬 Messreihen")
 st.caption(f"Feste Programme, unabhängig von den Reglern. Jede Reihe rechnet auf Klick in einigen Sekunden; je Zelle {C.SERIES_RUNS} Instanzen mit den Zufalls-Seeds {C.SERIES_SEED} bis {C.SERIES_SEED + C.SERIES_RUNS - 1}.")
 tab1, tab2, tab3 = st.tabs(["Welche Geschmäcker?", "Wie viele Mieter?", "Wie ungleich?"])
 with tab1:
-    st.markdown(f"**Wie oft sind negative Preise nötig?** Anteil der Instanzen für die drei Geschmacksmodelle ({C.SERIES_N} Mieter, Ungleichheit {C.SERIES_K}).")
+    st.markdown(f"**Wie oft haben die neidfreien Aufteilungen einen negativen Preis?** Anteil der Instanzen für die drei Geschmacksmodelle ({C.SERIES_N} Mieter, Ungleichheit {C.SERIES_K}).")
     if st.button("Reihe rechnen", key="models_button"):
         t0 = time.perf_counter()
         with st.spinner("Rechne die Reihe (einige Sekunden) …"):
@@ -201,7 +201,7 @@ with st.expander("📐 Mathematische Formulierung"):
 
 **Neidfreiheit.** $v_{i\sigma(i)} - p_{\sigma(i)} \ge v_{ij} - p_j$ für alle $i, j$, also $p_{\sigma(i)} - p_j \le v_{i\sigma(i)} - v_{ij}$. Das ist ein lineares System; es hat eine Lösung genau dann, wenn $\sigma$ die Summe $\sum_i v_{i\sigma(i)}$ maximiert, und dann gilt dasselbe für jede maximierende Zuordnung (Dualität der Zuordnungsaufgabe).
 
-**Neidfreie Preise für die Gesamtmiete $R$** gab es in allen gemessenen Instanzen (nach der Literatur immer, wenn jede Zeile auf $R$ summiert; aus dem Gedächtnis); nur der Ausschluss negativer Preise machte sie manchmal unmöglich.
+**Neidfreie Preise für die Gesamtmiete $R$** gab es in allen gemessenen Instanzen (nach der Literatur immer, mit erlaubten negativen Preisen; die Eichung „Zeile summiert auf $R$“ ist dafür nicht nötig; aus dem Gedächtnis); nur der Ausschluss negativer Preise machte sie manchmal unmöglich.
 
 **Maximin.** $\max t$ unter $t \le v_{i\sigma(i)} - p_{\sigma(i)}$, Neidfreiheit und $\sum p_j = R$; danach unter dem Optimum $t^*$ die kleinste Spanne $\min \bigl(\max_j p_j - \min_j p_j\bigr)$. Kleinste Spanne: dasselbe ohne die Bedingung an $t$.
 

@@ -117,7 +117,7 @@ def witness_lines(a: Analysis) -> list[str]:
         elif o.has_negative and rule == "maximin":
             neg = [j for j, p in enumerate(o.prices) if p < -A.TOL]
             names = ", ".join(f"{hall(j)} ({eur(o.prices[j])})" for j in neg)
-            lines.append(f"**{short_rule(rule)}, negative Preise:** {names}; wer diese Fläche nimmt, bekommt Geld dazu; nur so zieht niemand eine andere Fläche vor.")
+            lines.append(f"**{short_rule(rule)}, negative Preise:** {names}; wer diese Fläche nimmt, bekommt Geld dazu; so wird der Mindestnutzen am größten (ohne negative Preise ginge es auch, dann ist der Mindestnutzen aber kleiner).")
     return lines
 
 
@@ -130,7 +130,7 @@ def verdict_state(a: Analysis) -> tuple[str, str]:
             f"{'' if g.envy_free else ' (' + tenant(g.envy_pair[0]) + ' beneidet ' + hall(g.envy_pair[1]) + ')'}. "
             f"Hier gibt es neidfreie Preise; der größte Mindestnutzen ist {eur(mi.min_utility)} (Preise von {eur(min(mi.prices))} bis {eur(max(mi.prices))}, Gewinn gegenüber gleich {eur(mi.min_utility - g.min_utility)}). ")
     if mi.has_negative:
-        text += "Dafür ist mindestens ein Preis negativ. "
+        text += "Bei diesem größten Mindestnutzen ist mindestens ein Preis negativ. "
         text += (f"Verlangt man Preise ab 0, sinkt der Mindestnutzen auf {eur(ne.min_utility)}." if ne is not None else "Verlangt man Preise ab 0, gibt es hier keine neidfreie Aufteilung.")
     else:
         text += "Alle Preise sind positiv; die Bedingung „Preise ab 0“ kostet hier nichts."

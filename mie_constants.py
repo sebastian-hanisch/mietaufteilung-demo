@@ -51,7 +51,7 @@ PRESETS = {
 }
 PRESET_HELP = {
     "Vier Mieter": "Voreinstellung: vier Mieter, vier Flächen, unabhängige Geschmäcker. Die gleiche Aufteilung lässt einen Mieter 110 € Neid empfinden; neidfreie Preise gibt es ohne negative Preise.",
-    "Negative Preise": "Hier ist die gleiche Aufteilung weit von neidfrei (größter Neid 432 €, kleinster Nutzen −221 €). Neidfreie Preise brauchen einen negativen Preis (−111 €), und „Preise ab 0“ kosten Mindestnutzen (140 € gegen 29 €).",
+    "Negative Preise": "Hier ist die gleiche Aufteilung weit von neidfrei (größter Neid 432 €, kleinster Nutzen −221 €). Die neidfreien Preise mit dem größten Mindestnutzen haben einen negativen Preis (−111 €); „Preise ab 0“ gibt es hier auch, kosten aber Mindestnutzen (140 € gegen 29 €).",
     "Preise ab 0 unmöglich": "Bei ähnlichen Geschmäckern (alle schätzen dieselben Flächen) gibt es hier keine neidfreie Aufteilung ohne negative Preise: die unbeliebten Flächen müssen mit Geld ausgeglichen werden (negativer Preis).",
     "Sechs Mieter, eine Premiumfläche": "Eine Fläche, die alle wollen: die gleiche Aufteilung lässt 319 € Neid zu, neidfreie Preise heben den kleinsten Nutzen von −32 € auf 42 €, ganz ohne negative Preise.",
     "Sehr ungleiche Bewertungen": "Jeder Mieter will ein oder zwei Flächen sehr und die anderen kaum: die neidfreien Preise liegen weit auseinander (Spanne 775 €), der größte Mindestnutzen ist 529 €, mit „Preise ab 0“ nur 206 €.",
