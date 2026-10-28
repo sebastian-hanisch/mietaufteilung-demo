@@ -55,13 +55,26 @@ with st.container(key="kopf"):
 st.markdown(
     f"""
 Mehrere Betriebe mieten gemeinsam eine Lagerhalle, die in **gleich viele Flächen** wie Mieter geteilt ist, und zahlen zusammen eine **feste Gesamtmiete** ({C.RENT:,} €). Die Flächen sind nicht gleich viel wert: eine liegt am Tor, eine hat keine Rampe. Jeder Mieter sagt, **was ihm jede Fläche wert ist** (seine Bewertungen summieren sich auf die Gesamtmiete).
-Gesucht sind eine **Zuordnung** (wer bekommt welche Fläche) und **Preise** (die sich auf die Gesamtmiete summieren), so dass **niemand eine andere Fläche zu deren Preis lieber hätte**: Neidfreiheit. Die naheliegende **gleiche Aufteilung** (Miete durch Flächenzahl) erfüllt das fast nie.
-Die Demo vergleicht **fünf Preisregeln** auf denselben Bewertungen und zeigt, was neidfreie Preise brauchen: eine bestimmte Zuordnung, manchmal **negative Preise** (unvermeidbar nur dort, wo es keine neidfreien Preise ab 0 gibt) und eine Entscheidung, wer wie viel bekommt (hier: der größte Mindestnutzen, der oft negative Preise wählt).
+Gesucht sind eine **Zuordnung** (wer bekommt welche Fläche) und **Preise** (die sich auf die Gesamtmiete summieren), so dass **niemand eine andere Fläche zu deren Preis lieber hätte**: Neidfreiheit. Die naheliegende **gleiche Aufteilung** (Miete durch Flächenzahl) erfüllt das mit jedem zusätzlichen Mieter seltener (bei drei Mietern in 23 % der Instanzen, bei sieben in 1 %; unabhängige Bewertungen).
+Die Demo vergleicht **fünf Preisregeln** auf denselben Bewertungen und zeigt, was neidfreie Preise brauchen: eine bestimmte Zuordnung, manchmal **negative Preise** (unvermeidbar nur dort, wo es keine neidfreien Preise ab 0 gibt) und eine Entscheidung, wer wie viel bekommt (hier: der größte Mindestnutzen, der je nach Bewertungsmuster in 0 bis 51 % der Instanzen einen negativen Preis wählt).
 Verwandt: `hungarian-demo` und `auction-algorithm-demo` (Zuordnung), `moulin-demo` und `shapley-demo` (Kosten teilen), `unteilbare-gueter-demo` (Güter ohne Preise verteilen).
 
-Weiter unten: der Abschnitt **🔬 Messreihen**, **🚧 Wo die Annahmen enden** und der Expander **📐 Mathematische Formulierung**.
+Wer die Frage zuerst ohne Fachbegriffe verstehen will, öffnet „💬 In einfachen Worten“. Weiter unten: der Abschnitt **🔬 Messreihen**, **🚧 Wo die Annahmen enden** und der Expander **📐 Mathematische Formulierung**.
 """.replace(f"{C.RENT:,}", f"{C.RENT:,}".replace(",", "."))
 )
+
+# erklaerseite:einfach:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/mietaufteilung-erklaert.json, nicht von Hand ändern)
+with st.expander("💬 In einfachen Worten"):
+    st.markdown(
+        """
+Mehrere Betriebe mieten zusammen eine Lagerhalle mit so vielen Flächen, wie es Betriebe gibt, und zahlen eine feste Gesamtmiete. Jeder Betrieb sagt, was ihm jede Fläche wert ist. Gesucht sind eine Zuteilung und Preise, bei denen kein Betrieb lieber eine andere Fläche zu deren Preis hätte. Das heißt **neidfrei**.
+
+Die gleiche Aufteilung der Miete ist in der Demo mit jedem zusätzlichen Mieter seltener neidfrei. Neidfreie Preise gab es dagegen in allen durchgerechneten Fällen. Sie gehören zu einer bestimmten Zuteilung, und die Regeln, unter ihnen auszuwählen, setzen manchmal einen negativen Preis. Die Messreihen weiter unten zeigen, wie stark das davon abhängt, wie die Bewertungen entstehen.
+
+[Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/mietaufteilung-erklaert.html)
+        """
+    )
+# erklaerseite:einfach:end
 
 with st.expander("So wird gerechnet", expanded=True):
     st.markdown(
@@ -195,6 +208,26 @@ st.markdown(
 st.markdown("---")
 
 with st.expander("📐 Mathematische Formulierung"):
+    # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/mietaufteilung-erklaert.json, nicht von Hand ändern)
+    st.markdown(
+        r"""
+**Lesehilfe.** Gegeben sind $n$ Mieter und $n$ Flächen, die Gesamtmiete $R$ und die Bewertungen $v_{ij}$ jedes Mieters für jede Fläche. Gesucht sind eine Zuordnung $\sigma$ und Preise $p_j$ mit der Summe $R$, so dass kein Mieter eine andere Fläche zu deren Preis vorzieht.
+
+| Symbol | Bedeutung |
+|---|---|
+| $i$, $j$ | Mieter bzw. Fläche; $i, j = 1, \dots, n$ |
+| $n$ | Zahl der Mieter, zugleich Zahl der Flächen |
+| $R$ | Gesamtmiete (feste Summe aller Preise) |
+| $v_{ij}$ | Bewertung: was Fläche $j$ dem Mieter $i$ wert ist; jede Zeile summiert sich auf $R$ |
+| $\sigma$, $\sigma(i)$ | Zuordnung; Mieter $i$ bekommt die Fläche $\sigma(i)$ |
+| $p_j$ | Preis der Fläche $j$ |
+| $u_i$ | Nutzen von Mieter $i$: Bewertung seiner Fläche minus ihr Preis |
+| $t$ | der kleinste Nutzen aller Mieter, den die Regel Maximin so groß wie möglich macht |
+
+[Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/mietaufteilung-erklaert.html#fachleute)
+        """
+    )
+    # erklaerseite:lesehilfe:end
     st.markdown(
         r"""
 **Instanz.** $n$ Mieter, $n$ Flächen, Gesamtmiete $R$, Bewertungen $v_{ij} \ge 0$ mit $\sum_j v_{ij} = R$ für jeden Mieter $i$. Eine Aufteilung ist eine Zuordnung $\sigma$ (Mieter $i$ bekommt Fläche $\sigma(i)$) und Preise $p_j$ mit $\sum_j p_j = R$. Der Nutzen von Mieter $i$ ist $u_i = v_{i\sigma(i)} - p_{\sigma(i)}$.
